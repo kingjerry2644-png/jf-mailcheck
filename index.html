@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Mail Connection Check</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#17202b;--mut:#5d6b7c;--brand:#032147;--line:#e3e8ef}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:12px;max-width:380px;width:100%;padding:22px}
+.bd{font:700 13px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--brand);margin:0 0 16px}
+h1{font-size:16px;margin:0 0 4px;letter-spacing:-.01em}
+p{margin:0 0 14px;color:var(--mut);font-size:13px}
+.ipbox{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:13px;text-align:center;margin:0 0 14px}
+.lbl{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
+.ip{font:600 21px/1.25 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--brand);word-break:break-all;min-height:26px}
+a.btn{display:block;text-align:center;background:#25d366;color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:12px;border-radius:9px}
+a.btn[aria-disabled="true"]{background:#c7ced6;pointer-events:none}
+.n{font-size:12px;color:var(--mut);margin:13px 0 0;padding-top:13px;border-top:1px solid var(--line)}
+.n b{color:var(--ink);font-weight:600}
+</style></head><body>
+<div class="c">
+<p class="bd">JetFlux</p>
+<h1>Mail Connection Check</h1>
+<p>Use This Page Only If Your Email Will Not Send.</p>
+<div class="ipbox"><div class="lbl">Your Internet Address</div><div class="ip" id="ip">Checking</div></div>
+<a class="btn" id="go" href="#" aria-disabled="true">Send This To JetFlux</a>
+<p class="n">Tap the button and send the message. We start on it as soon as it reaches us. You do not need to change anything on your computer or phone.</p>
+</div>
+<script>
+(function () {
+  var srcs = ['https://api.ipify.org?format=json', 'https://api64.ipify.org?format=json', 'https://ipinfo.io/json'];
+  var el = document.getElementById('ip'), go = document.getElementById('go');
+  function show(ip) {
+    el.textContent = ip;
+    go.href = 'https://wa.me/27627642873?text=' + encodeURIComponent('My internet address is ' + ip + ' and my email is not sending. Please clear it.');
+    go.setAttribute('aria-disabled', 'false');
+  }
+  function fail() {
+    el.textContent = 'Not Available';
+    go.href = 'https://wa.me/27627642873?text=' + encodeURIComponent('My email is not sending. Please assist.');
+    go.setAttribute('aria-disabled', 'false');
+  }
+  function next(i) {
+    if (i >= srcs.length) { return fail(); }
+    fetch(srcs[i], { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(0); })
+      .then(function (d) { d && d.ip ? show(String(d.ip)) : next(i + 1); })
+      .catch(function () { next(i + 1); });
+  }
+  next(0);
+})();
+</script>
+</body></html>
